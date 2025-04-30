@@ -27,20 +27,21 @@ const testSchema = new Schema({
   },
   age: Number,
 });
+const userSchema = new Schema({
+  username: {
+    type: String,
+    required: true,
+  },
+});
+const userModel = mongoose.model("Users", userSchema);
 
-const testModel = mongoose.model("Test", testSchema);
-
-app.get("/api", (req, res) => {
-  const testInput = new testModel({
-    name: "test1",
-    age: 25,
+app.post("/api/users", (req, res) => {
+  const user = new userModel({
+    username: req.body.username,
   });
-  testInput
+  user
     .save()
-    .then((result) => {
-      res.send(result);
-      console.log("save success!");
-    })
+    .then((result) => console.log("New user created"))
     .catch((err) => console.log(err));
 });
 
