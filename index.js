@@ -20,13 +20,7 @@ app.get("/", (req, res) => {
   res.sendFile(__dirname + "/views/index.html");
 });
 
-const testSchema = new Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  age: Number,
-});
+//create users
 const userSchema = new Schema({
   username: {
     type: String,
@@ -36,13 +30,23 @@ const userSchema = new Schema({
 const userModel = mongoose.model("Users", userSchema);
 
 app.post("/api/users", (req, res) => {
+  const name = req.body.username;
   const user = new userModel({
-    username: req.body.username,
+    username: name,
   });
   user
     .save()
-    .then((result) => console.log("New user created"))
-    .catch((err) => console.log(err));
+    .then((result) => console.log("New User added!"))
+    .catch((err) => {
+      console.log("Error saving user");
+      console.log(err);
+    });
+});
+
+app.get("/api/users", async (req, res) => {
+  let allUsers;
+  allUsers = await userModel.find({});
+  res.send(allUsers);
 });
 
 const listener = app.listen(process.env.PORT || 3500, () => {
